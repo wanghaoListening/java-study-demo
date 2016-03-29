@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+           
+    <bean id="car" class="com.haothink.designpattern.factory.Car"></bean> 
+    
+    <aop:config>
+    	<aop:pointcut expression="execution(* aop.dao.UserDao.*(..))" id="userdaoAop"/>
+    	<aop:aspect ref="transaction">
+    		<aop:before method="OpenTransaction" pointcut-ref="userdaoAop"/>
+    		<aop:after-returning method="commit" pointcut-ref="userdaoAop"/>
+    		<aop:after method="finallyInform" pointcut-ref="userdaoAop"/>
+    		<aop:after-throwing method="exception" pointcut-ref="userdaoAop" throwing="e"/>
+    		<aop:around method="aroundInform" pointcut-ref="userdaoAop" />
+    	</aop:aspect>
+    </aop:config>       
+     <!-- 导入其它spring配置文件 --> 
+	
+</beans>
