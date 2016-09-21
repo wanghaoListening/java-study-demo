@@ -5,17 +5,20 @@ package com.haothink.designpattern.singleton;
  * */
 public class LanHanShi {
 	
-	private LanHanShi lanHanShi;
+	private static volatile LanHanShi lanHanShi = null;
 	
 	private LanHanShi(){
 		
 	}
 	
-	public synchronized LanHanShi getInstance(){
-		if(lanHanShi == null){
+	public static LanHanShi getInstance(){
+	     if(lanHanShi == null){	
+		synchronized(LanHanShi.class){
+		    if(lanHanShi == null){
 			lanHanShi = new LanHanShi();
+		    }
 		}
-		
-		return lanHanShi;
+	     }
+	     return lanHanShi;
 	}
 }
