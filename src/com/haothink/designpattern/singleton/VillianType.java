@@ -1,17 +1,17 @@
 package com.haothink.designpattern.singleton;
-/*¶ñººÊ½µ¥ÀûÄ£Ê½ÑİÊ¾
- * 1.Ë½ÓĞµÄ¹¹ÔìÆ÷
- * 3.Ö¸Ïò×Ô¼ºÊµÀıµÄË½ÓĞµÄ¾²Ì¬ÒıÓÃ
- * 3.·µ»Ø×Ô¼º¶ÔÏóÊµÀıµÄµÄ¹«¹²¾²Ì¬·½·¨
+/*æ¶æ±‰å¼å•åˆ©æ¨¡å¼æ¼”ç¤º
+ * 1.ç§æœ‰çš„æ„é€ å™¨
+ * 3.æŒ‡å‘è‡ªå·±å®ä¾‹çš„ç§æœ‰çš„é™æ€å¼•ç”¨
+ * 3.è¿”å›è‡ªå·±å¯¹è±¡å®ä¾‹çš„çš„å…¬å…±é™æ€æ–¹æ³•
  * 
  * */
 public class VillianType {
 	
-	private VillianType villianType = new VillianType();
+	private static final VillianType villianType = new VillianType();
 	
 	private VillianType(){}
 	
-	public VillianType getInstance(){
+	public static VillianType getInstance(){
 		
 		return villianType;
 	}
