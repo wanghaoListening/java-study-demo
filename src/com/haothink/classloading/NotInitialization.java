@@ -3,9 +3,6 @@ package com.haothink.classloading;
 public class NotInitialization {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//System.out.println(SubClass.value);
-
 		SuperClass[] sc = new SuperClass[5];
 		String str = "me.jpg";
 		String[] strArray = str.split("\\.");

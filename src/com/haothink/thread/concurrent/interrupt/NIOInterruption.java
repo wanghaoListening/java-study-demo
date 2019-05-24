@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 /**
  * @author wanghao
- * nio���ṩ���ṩ�˸������Ի���I/O�жϡ���������nioͨ�����Զ�����Ӧ�ж�
+ * bio���ṩ���ṩ�˸������Ի���I/O�жϡ���������nioͨ�����Զ�����Ӧ�ж�
  * */
 @SuppressWarnings({ "unused", "resource" })
 public class NIOInterruption {

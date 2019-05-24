@@ -1,12 +1,12 @@
 package com.haothink.string;
 /*
- * jdk1.7ÖÐµÄintern()ÊµÏÖ²»»á¸´ÖÆÊµÀýµ½³£Á¿³ØÖÐ£¬Ö»ÊÇÔÚ³£Á¿³ØÖÐ¼ÇÂ¼
- * Ê×´Î³öÏÖµÄ×Ö·û´®µÄÊµÀýµÄÒýÓÃ£¬Ë÷Òýstr1·µ»Øtrue£¬¶ø³£Á¿³ØÖÐÔçÒÑÓÐJava
- * Õâ¸ö×Ö·ûËùÒÔ£¬²»·ûºÏintern()µÄÊ×´Î³öÏÖÔ­Ôò£¬¹Ê·µ»Øfalse
+ * jdk1.7ï¿½Ðµï¿½intern()Êµï¿½Ö²ï¿½ï¿½á¸´ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½Ö»ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½Â¼
+ * ï¿½×´Î³ï¿½ï¿½Öµï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½str1ï¿½ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Java
+ * ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½intern()ï¿½ï¿½ï¿½×´Î³ï¿½ï¿½ï¿½Ô­ï¿½ò£¬¹Ê·ï¿½ï¿½ï¿½false
  * */
 public class StringPool {
 	public static void main(String[] args) {
-		String str1 = new StringBuilder("Èí¼þ¹¤³Ì").append("µ¼ÂÛ").toString();
+		String str1 = new StringBuilder("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½").append("ï¿½ï¿½ï¿½ï¿½").toString();
 		System.out.println(str1.intern() == str1);
 		
 		String str2 = new StringBuilder("ja").append("va").toString();
