@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 public class CyclicBarrierTest3 {
 	public static void main(String [] args){
 		ExecutorService service=Executors.newCachedThreadPool();
-		final CyclicBarrier cb=new CyclicBarrier(3);  //�����߳�ͬʱ����
+		final CyclicBarrier cb=new CyclicBarrier(3);
 		for(int i=0;i<3;i++){         
 			Runnable runnable=new Runnable(){
 				public void run(){
