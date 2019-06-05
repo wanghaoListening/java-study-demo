@@ -20,6 +20,7 @@
         <mysql.version>5.1.44</mysql.version>
         <oracle.version>6</oracle.version>
         <zkclient.version>0.1</zkclient.version>
+        <curator.version>4.1.0</curator.version>
         <junit.version>4.12</junit.version>
         <druid.version>1.1.5</druid.version>
         <spring.version>4.3.10.RELEASE</spring.version>
@@ -28,6 +29,7 @@
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.2</slf4j.version>
         <jackson.version>1.9.13</jackson.version>
+        <protobuf.version>3.8.0</protobuf.version>
         <servlet.version>3.0.1</servlet.version>
         <common.lang.version>3.6</common.lang.version>
         <common.io.version>2.5</common.io.version>
@@ -55,6 +57,11 @@
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
             <version>${zkclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator.version}</version>
         </dependency>
         <!-- dubbo相关 end -->
 
@@ -197,6 +204,17 @@
         </dependency>
         <!-- Jackson  END-->
 
+        <!--protobuf -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
         <!-- Servlet  -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -242,17 +260,22 @@
             <artifactId>commons-codec</artifactId>
             <version>${common.codec.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.2.10.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-    </dependencies>
 
+        <!-- https://mvnrepository.com/artifact/cglib/cglib -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>org.apache.httpcomponents</groupId>-->
+        <!--<artifactId>httpclient</artifactId>-->
+        <!--<version>4.5.3</version>-->
+        <!--</dependency>-->
+        <!-- Apache Commons END -->
+
+
+    </dependencies>
 
 </project>
