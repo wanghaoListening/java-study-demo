@@ -8,7 +8,6 @@ public class ConcreteWeatherSubject extends WeatherSubject {
 		return weatherContent;
 	}
 	/**
-	 * 当目标者状态改变时提醒观察者
 	 * 
 	 * */
 	public void setSubjectState(String weatherContent) {

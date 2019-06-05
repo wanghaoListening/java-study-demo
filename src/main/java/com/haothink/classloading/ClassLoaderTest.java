@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 类加载器与instanceof关键字演示
- * 比较两个类是否相等，只有在两个类被相同的加载器加载的情况下才有意义。 
  * @author wanghao
  */
 public class ClassLoaderTest {

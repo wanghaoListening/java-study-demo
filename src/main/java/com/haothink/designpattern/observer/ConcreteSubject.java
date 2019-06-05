@@ -7,7 +7,7 @@ public class ConcreteSubject extends Subject {
 		return subjectState;
 	}
 	/**
-	 * 当目标者状态改变时提醒观察者 
+	 *
 	 * */
 	public void setSubjectState(String subjectState) {
 		this.subjectState = subjectState;

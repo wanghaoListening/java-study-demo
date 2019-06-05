@@ -9,6 +9,6 @@ public class Client {
 		co.setName("al");
 		ws.addObserver(co);
 		
-		ws.setContent("今天天气好晴朗");
+		ws.setContent("hi old brother");
 	}
 }
