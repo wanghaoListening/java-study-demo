@@ -5,13 +5,13 @@ public class ShoppingCmd extends Command{
 	@Override
 	public void excute() {
 	
-		System.out.println("去购物");
+		System.out.println("execute");
 	}
 
 	@Override
 	public void undo() {
 	
-		System.out.println("不想去购物");
+		System.out.println("Undo");
 	}
 	
 }

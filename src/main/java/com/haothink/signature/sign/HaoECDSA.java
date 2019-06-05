@@ -12,11 +12,7 @@ import java.security.interfaces.ECPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-/**
- * 微软产品的序列号验证用的ECDSA
- * 椭圆曲线数字签名算法
- * 速度快，强度高，签名短
- * */
+
 public class HaoECDSA {
 	
 	public static byte[] byteStr;
@@ -27,7 +23,7 @@ public class HaoECDSA {
 	public static Signature signature;
 	static{
 		try {
-			//1.初始化密钥
+
 			generator = KeyPairGenerator.getInstance("EC");
 			generator.initialize(256);
 			KeyPair keypair = generator.generateKeyPair();

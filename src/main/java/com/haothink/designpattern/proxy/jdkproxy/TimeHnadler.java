@@ -17,9 +17,9 @@ public class TimeHnadler implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		System.out.println("时间计时开始");
+		System.out.println("start");
 		method.invoke(moveable);
-		System.out.println("时间已到");
+		System.out.println("end");
 		return null;
 	}
 

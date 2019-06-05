@@ -6,7 +6,7 @@ public class Plane implements Moveable{
 
 	@Override
 	public void start() {
-		System.out.println("飞机开始启动");
+		System.out.println("plane run ...");
 		
 	}
 

@@ -2,28 +2,21 @@ package com.haothink.sequence;
 
 import java.util.Arrays;
 
+
 /**
- * øÏÀŸ≈≈–Ú(øÏÀŸ≈≈–Ú÷–µƒøÏ «÷∏“ª¥ŒΩªªªø…ƒ‹œ˚≥˝∂‡∏ˆƒÊ–Ú)
- * ¥ÀÀ„∑® «≤ªŒ»∂®≈≈–Ú
- * À„∑®ÀºœÎ:œ»¥”–Ú¡–—°≥ˆ“ª∏ˆº«¬ºkey£¨»ª∫ÛΩ´–Ú¡–÷–¥Û”⁄keyµƒ‘™Àÿ“∆µΩ∫ÛÕ∑£¨–°”⁄keyµƒ‘™Àÿ“∆µΩ
- * keyµƒ«∞Õ∑£¨¥À∫ÛΩ´key≤Â»Î¡Ω∏ˆ◊÷±Ìµƒ÷–º‰£¨÷¡¥À≥…Œ™“ªÃÀ≈≈–Ú£¨»ª∫Û‘Ÿ∂‘◊÷±ÌΩ¯––÷ÿ∏¥∂Ø◊˜°£÷±µΩ◊÷±Ì
- * ≥§∂»≤ª≥¨π˝“ªŒ™÷π°£
- *  ±º‰∏¥‘”∂»£¨◊Ó∫√£¨O(nlog2n) ◊ÓªµŒ™£¨O(n^2)
- * ø’º‰∏¥‘”∂»£¨O(log2n)
- * øÏ≈≈ø’º‰∏¥‘”∂»∑÷Œˆ£¨øÏ≈≈µƒµ›πÈÀ„∑®÷¥––π˝≥Ã∂‘”¶“ªø≈∂˛≤Ê ˜£¨¿ÌœÎ«Èøˆœ¬ «“ªø≈ÕÍ»´∂˛≤Ê ˜
- * µ›πÈπ§◊˜’æµƒ¥Û–°”Îµ›πÈµ˜”√∂˛≤Ê ˜µƒ…Ó∂»∂‘”¶£¨∆Ωæ˘«Èøˆœ¬∏®÷˙ø’º‰µƒ£¨∏¥‘”∂»Œ™O(log2n)
- * */
+ * Âø´ÈÄüÊéíÂ∫è
+ */
 public class QKSortDemo {
 	
 	public static void main(String[] args) {
 		int[] data = new int[]{49,38,65,97,76,13,27,49,54,04};
 		quick(data);
-		System.out.println("≈≈–Ú∫ÛŒ™"+Arrays.toString(data));
+		System.out.println(Arrays.toString(data));
 	}
 	
 	public static void quick(int[] numbers)
 	{
-		if(numbers.length > 0)   //≤Èø¥ ˝◊È «∑ÒŒ™ø’
+		if(numbers.length > 0)
 		{
 			quickSort(numbers, 0, numbers.length-1);
 		}
@@ -33,15 +26,15 @@ public class QKSortDemo {
 	{
 		if(low < high)
 		{
-			int middle = getMiddle(numbers,low,high); //Ω´numbers ˝◊ÈΩ¯––“ª∑÷Œ™∂˛
-			quickSort(numbers, low, middle-1);   //∂‘µÕ◊÷∂Œ±ÌΩ¯––µ›πÈ≈≈–Ú
-			quickSort(numbers, middle+1, high); //∂‘∏ﬂ◊÷∂Œ±ÌΩ¯––µ›πÈ≈≈–Ú
+			int middle = getMiddle(numbers,low,high);
+			quickSort(numbers, low, middle-1);
+			quickSort(numbers, middle+1, high);
 		}
 
 	}
 	public static int getMiddle(int[] numbers, int low,int high)
 	{
-		int temp = numbers[low]; // ˝◊Èµƒµ⁄“ª∏ˆ◊˜Œ™÷–÷·
+		int temp = numbers[low];
 		while(low < high)
 		{
 			while(low < high && numbers[high] >= temp)
@@ -58,8 +51,8 @@ public class QKSortDemo {
 				high--;
 			}
 		}
-		numbers[low] = temp ; //÷–÷·º«¬ºµΩŒ≤
-		return low ; // ∑µªÿ÷–÷·µƒŒª÷√
+		numbers[low] = temp ;
+		return low ;
 	}
 	
 	

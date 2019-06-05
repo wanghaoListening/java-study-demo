@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-//感觉是工厂方法模式
+
 @SuppressWarnings("unchecked")
 public class ClassPathXmlApplicationContext implements ApplicationContext{
 	private final Map<String,Object> container = new ConcurrentHashMap<>();
@@ -33,30 +33,30 @@ public class ClassPathXmlApplicationContext implements ApplicationContext{
 	@Override
 	public Object getBean(String id) {
 		if(id==null||id=="")
-			throw new RuntimeException("id不能为空");
+			throw new RuntimeException("id锟斤拷锟斤拷为锟斤拷");
 		Object obj = container.get(id);
 		if(obj == null)
-			throw new RuntimeException("ID不存在");
+			throw new RuntimeException("ID锟斤拷锟斤拷锟斤拷");
 		return obj;
 	}
-	/*1.读取xml文件bean节点把属性ID及
-	 * class的实例全都保存到map集合中
+	/*1.锟斤拷取xml锟侥硷拷bean锟节碉拷锟斤拷锟斤拷锟絀D锟斤拷
+	 * class锟斤拷实锟斤拷全锟斤拷锟斤拷锟芥到map锟斤拷锟斤拷锟斤拷
 	 * 
 	 * */
 	private void saveBeanMsg() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
 	
 		Element root = document.getRootElement();
-		//第一层,根据子标签名称获取所有的bean标签
+		//锟斤拷一锟斤拷,锟斤拷锟斤拷锟接憋拷签锟斤拷锟狡伙拷取锟斤拷锟叫碉拷bean锟斤拷签
 		
 		List<Element> list = root.elements("bean");
 		
 		for(Element bean : list) {
-			//获取bean标签的属性
+			//锟斤拷取bean锟斤拷签锟斤拷锟斤拷锟斤拷
 			String pid = bean.attributeValue("id");
 			String clazz= bean.attributeValue("class");
 			System.out.println(pid);
 			System.out.println(clazz);
-			//获取class的实例对象
+			//锟斤拷取class锟斤拷实锟斤拷锟斤拷锟斤拷
 			Object obj = getObjectByClazz(clazz);
 			container.put(pid, obj);
 			

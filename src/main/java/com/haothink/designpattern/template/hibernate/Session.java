@@ -4,11 +4,11 @@ public class Session {
 	
 	public void save(Object obj){
 		String name = obj.getClass().getName();
-		System.out.println("已经将"+name+"保存到数据库中");
+		System.out.println(name);
 	}
 
 	public Transaction beginTransaction() {
-		System.out.println("开启事务");
+		System.out.println("寮�浜嬬墿");
 		return new Transaction();
 	}
 

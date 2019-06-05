@@ -11,7 +11,7 @@ public class Car implements Moveable {
 	@Override
 	public void run() {
 		
-		System.out.println("汽车在缓慢的行驶");
+		System.out.println("car run ....");
 
 	}
 

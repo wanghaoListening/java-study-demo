@@ -14,8 +14,6 @@ import java.security.spec.X509EncodedKeySpec;
 
 /**
  * @author wanghao
- * DSA仅包含数字签名
- * DSA既包含数字签名又有加解密的操作
  * SHA1withDSA
  * */
 public class HaoDsa {
@@ -28,7 +26,7 @@ public class HaoDsa {
 	public static Signature signature;
 	static{
 		try {
-			//1.初始化密钥
+
 			generator = KeyPairGenerator.getInstance("DSA");
 			generator.initialize(512);
 			KeyPair keypair = generator.generateKeyPair();

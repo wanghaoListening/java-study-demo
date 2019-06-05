@@ -8,16 +8,14 @@ public class HibernateTemplate {
 			s = getSession();  
 			s.beginTransaction();  
 
-			//执行接口的方法，这样那个类要是实现了这个接口就得实现这方法就相当把这方法插到了此处  
+
 			callback.doInHibernate(s);  
 
 			s.getTransaction().commit();  
 
-		}catch(Exception e){  
-			s.beginTransaction().rollback();  
-		}finally{  
-
-		}  
+		}catch(Exception e){
+			s.beginTransaction().rollback();
+		}
 	}
 
 	private Session getSession() {  

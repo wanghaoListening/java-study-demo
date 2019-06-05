@@ -3,12 +3,7 @@ package com.haothink.sequence;
 import java.util.Arrays;
 
 /**
- * 冒泡排序
- * 此排序是：稳定排序
- * 它是通过对相邻的数据元素进行交换，逐步将待排序列变成有序序列的过程。
- * 第一趟排序后把最大的元素排到最后头。再对前n-1个元素进行排序。
- * 冒泡排序的时间复杂度是O（n^2）
- * 空间复杂度为O（1）
+ * 鍐掓场鎺掑簭
  * */
 public class BubbleSortDemo {
 	
@@ -20,7 +15,7 @@ public class BubbleSortDemo {
 	}
 	
 	public static void bubbleSort(int[] data){
-		int temp=0;//用作数据交换时的存储空间
+		int temp=0;
 		for(int i=1;i<=data.length-1;i++){
 			for(int j=0;j<data.length-i;j++){
 				if(data[j]>data[j+1]){

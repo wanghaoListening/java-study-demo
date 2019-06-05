@@ -14,9 +14,8 @@ public class JavaVMStackSOF {
 		JavaVMStackSOF oom = new JavaVMStackSOF();
 		try {
 			oom.stackLeak();
-			//因为栈溢出是个err而不是exception所以用Throwable
 		} catch (Throwable e) {
-			System.out.println("深度为  " + oom.stackLength);
+			System.out.println(oom.stackLength);
 			throw e;
 		}
 	}

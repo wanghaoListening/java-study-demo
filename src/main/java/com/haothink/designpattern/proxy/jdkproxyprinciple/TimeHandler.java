@@ -19,7 +19,7 @@ public class TimeHandler implements InvocationHandler {
 		 
 		try {
 			long starttime = System.currentTimeMillis();
-			System.out.println("汽车开动了........");
+			System.out.println("starttime........");
 			m.invoke(target);
 			long endtime = System.currentTimeMillis();
 			System.out.println("time"+(endtime-starttime)+endtime);

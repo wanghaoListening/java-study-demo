@@ -3,10 +3,10 @@ package com.haothink.designpattern.template.hibernate;
 public class Transaction {
 	
 	public void commit(){
-		System.out.println("事务的提交");
+		System.out.println("commit");
 	}
 	
 	public void rollback(){
-		System.out.println("对事物进行回滚");
+		System.out.println("rollback");
 	}
 }

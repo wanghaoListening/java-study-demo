@@ -12,15 +12,13 @@ import javax.tools.ToolProvider;
 public class Main {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		//拿到当前工程的根目录
-		//String str = System.getProperty("user.dir");
-		//jdk1.6提供的类动态的生成Java的编译器com.sun.tools.javac.api.JavacTool
+
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager sjf = jc.getStandardFileManager(null, null, null);
 	
 		Iterable it = sjf.getJavaFileObjects("G:\\MoveProxy.java");
 		CompilationTask ct = jc.getTask(null, sjf, null, null, null, it);
-		ct.call();//编译
+		ct.call();
 		sjf.close();
 		System.out.println(jc.getClass().getName());
 		
