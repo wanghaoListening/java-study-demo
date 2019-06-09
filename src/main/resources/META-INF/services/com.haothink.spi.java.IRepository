@@ -1,0 +1,2 @@
+com.haothink.spi.java.MongoRepository
+com.haothink.spi.java.MysqlRepository
