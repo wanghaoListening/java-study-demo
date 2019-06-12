@@ -3,7 +3,7 @@ package com.haothink.designpattern.builder;
 /**
  * @author wanghao
  * @date 2019年06月11日 16:11
- * description: 抽象建造者：BaseBuilder
+ * description: 抽象建造者：BaseBuilder。负责具体角色的创建过程
  */
 public abstract class BaseBuilder {
 
