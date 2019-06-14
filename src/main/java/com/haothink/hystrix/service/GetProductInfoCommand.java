@@ -22,6 +22,7 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfoBO> {
     private Long productId;
 
     public GetProductInfoCommand(Long productId) {
+        //默认使用线程池进行隔离
         super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCommandGroup"));
         this.productId = productId;
     }
