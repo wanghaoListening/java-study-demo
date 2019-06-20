@@ -4,10 +4,7 @@ package com.haothink.hystrix.service;
 import com.alibaba.fastjson.JSONObject;
 import com.haothink.hystrix.BO.ProductInfoBO;
 import com.haothink.utils.HttpClientUtils;
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
-import com.netflix.hystrix.HystrixCommandKey;
-import com.netflix.hystrix.HystrixRequestCache;
+import com.netflix.hystrix.*;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefault;
 
 import java.util.HashMap;
@@ -28,7 +25,26 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfoBO> {
 
     public GetProductInfoCommand(Long productId) {
         //默认使用线程池进行隔离
-        super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCommandGroup"));
+        super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCommandGroup"))
+                .andCommandKey(KEY)
+                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()
+                        .withCoreSize(8)
+                        .withMaxQueueSize(10)
+                        .withQueueSizeRejectionThreshold(8))
+                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                        // 是否允许断路器工作
+                        .withCircuitBreakerEnabled(true)
+                        // 滑动窗口中，最少有多少个请求，才可能触发断路
+                        .withCircuitBreakerRequestVolumeThreshold(20)
+                        // 异常比例达到多少，才触发断路，默认50%
+                        .withCircuitBreakerErrorThresholdPercentage(40)
+                        // 断路后多少时间内直接reject请求，之后进入half-open状态，默认5000ms
+                        .withCircuitBreakerSleepWindowInMilliseconds(3000)
+                        // 设置是否打开超时，默认是true
+                        .withExecutionTimeoutEnabled(true)
+                        // 设置超时时间，默认1000(ms)
+                        .withExecutionTimeoutInMilliseconds(500)
+                        .withFallbackIsolationSemaphoreMaxConcurrentRequests(30)));
         this.productId = productId;
     }
 
@@ -62,5 +78,11 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfoBO> {
     public static void flushCache(Long productId) {
         HystrixRequestCache.getInstance(KEY,
                 HystrixConcurrencyStrategyDefault.getInstance()).clear("product_info_" + productId);
+    }
+
+    @Override
+    protected ProductInfoBO getFallback() {
+        //直接返回为null
+        return null;
     }
 }
