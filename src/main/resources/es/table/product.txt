@@ -1,0 +1,214 @@
+{
+  "settings": {
+    "number_of_shards": 6,
+    "number_of_replicas": 1,
+    "sort.field": [
+      "date_created",
+      "id"
+    ],
+    "sort.order": [
+      "desc",
+      "desc"
+    ]
+  },
+  "mappings": {
+    "zss_down_api_log": {
+      "_all": {
+        "enabled": false
+      },
+      "dynamic": false,
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "my_flowid": {
+          "type": "keyword"
+        },
+        "query_phase_flag": {
+          "type": "keyword"
+        },
+        "usr_query_channel": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "usr_ip_addr": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "usr_id": {
+          "type": "long"
+        },
+        "corp_id": {
+          "type": "long"
+        },
+        "api_id": {
+          "type": "long"
+        },
+        "usr_flowid": {
+          "type": "keyword"
+        },
+        "usr_init_plain_text": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "usr_init_key_text": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "usr_init_key_type": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "usr_init_priv_bit_map": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "usr_init_timestamp": {
+          "type": "date"
+        },
+        "exit_error_code": {
+          "type": "keyword",
+          "null_value": "NULL"
+        },
+        "exit_key_text": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "exit_key_type": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "exit_timestamp": {
+          "type": "date"
+        },
+        "exit_result_flag": {
+          "type": "keyword"
+        },
+        "exit_plain_text": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "date_created": {
+          "type": "date"
+        },
+        "date_updated": {
+          "type": "date"
+        },
+        "execute_timestamp": {
+          "type": "date"
+        },
+        "should_charge": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}{
+  "settings": {
+    "number_of_shards": 6,
+    "number_of_replicas": 1,
+    "sort.field": [
+      "date_created",
+      "id"
+    ],
+    "sort.order": [
+      "desc",
+      "desc"
+    ]
+  },
+  "mappings": {
+    "zss_up_ds_api_log": {
+      "_all": {
+        "enabled": false
+      },
+      "dynamic": false,
+      "properties": {
+        "id": {
+          "type": "long"
+        },
+        "my_flowid": {
+          "type": "keyword"
+        },
+        "query_phase_flag": {
+          "type": "keyword"
+        },
+        "ds_id": {
+          "type": "long"
+        },
+        "ds_api_id": {
+          "type": "long"
+        },
+        "usr_flowid": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_send_plain_text": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_send_key_text": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "my_send_key_type": {
+          "type": "keyword"
+        },
+        "my_send_priv_bit_map": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_send_timestamp": {
+          "type": "date"
+        },
+        "ds_flowid": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_recv_key_text": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_recv_key_type": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_recv_timestamp": {
+          "type": "date"
+        },
+        "my_recv_result_flag": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_recv_error_code": {
+          "type": "keyword",
+          "index": false,
+          "doc_values": false
+        },
+        "my_recv_plain_text": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "date_created": {
+          "type": "date"
+        },
+        "date_updated": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
