@@ -5,11 +5,11 @@ package com.haothink.designpattern.iterator;
  */
 public class CollLinked implements ICollection{
 
-	Node head = null;
+	private Node head = null;
 
-	Node tail = null;
-	int count = 0;
-	@Override
+	private Node tail = null;
+	private int count = 0;
+
 	public void add(Object obj){
 		Node node = new Node(obj,null);
 		if(head == null){
@@ -23,12 +23,12 @@ public class CollLinked implements ICollection{
 		count++;
 	}
 
-	@Override
+
 	public int size(){
 		return count;
 	}
 
-	@Override
+
 	public IIterator iiterator() {
 
 		return new Linked();
@@ -36,7 +36,7 @@ public class CollLinked implements ICollection{
 
 	private class Linked implements IIterator{
 		int cursor=0;
-		@Override
+
 		public Object next() {
 			Node currNode;
 			Node node = head.getNext();
@@ -52,7 +52,7 @@ public class CollLinked implements ICollection{
 		}
 
 	
-		@Override
+
 		public boolean hasNext() {
 			// TODO Auto-generated method stub
 			return cursor!=size();
