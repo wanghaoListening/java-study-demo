@@ -1,13 +1,12 @@
 package com.haothink.zookeeper.lock;
 
 import com.haothink.zookeeper.CuratorLock;
-import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.retry.RetryNTimes;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,7 +18,7 @@ public class CuratorLockImpl implements CuratorLock {
 
 
     // session过期时间
-    private static int SESSION_TIMEOUT = 3000;
+    private static int SESSION_TIMEOUT = 6000;
     // 连接超时时间
     private static int CONNECTION_TIMEOUT = 3000;
 
@@ -30,14 +29,72 @@ public class CuratorLockImpl implements CuratorLock {
 
     InterProcessMutex mutex = null;
 
-    {
-        CuratorFramework framework = CuratorFrameworkFactory
+    CuratorFramework framework;
+
+
+    public CuratorLockImpl() {
+        framework = CuratorFrameworkFactory
                 .newClient(ZK_ADDRESS,
-                SESSION_TIMEOUT, CONNECTION_TIMEOUT,
-                new RetryNTimes(3,5000));
+                        SESSION_TIMEOUT, CONNECTION_TIMEOUT,
+                        new RetryNTimes(3,5000));
         framework.start();
         mutex = new InterProcessMutex(framework, CURATOR_LOCK);
         System.out.println("init lock success "+mutex);
+    }
+
+    public LockInstance builderLockInstance(String path){
+
+        return new LockInstance(path);
+    }
+
+    public class LockInstance implements CuratorLock{
+
+        private InterProcessMutex lockMutex;
+        private String lockPath;
+
+        public LockInstance(String lockPath) {
+            this.lockPath = lockPath;
+            lockMutex = new InterProcessMutex(framework, lockPath);
+            System.out.println(lockPath);
+        }
+
+        @Override
+        public boolean tryLock() {
+
+            return lock(3, TimeUnit.SECONDS);
+        }
+
+
+        @Override
+        public boolean tryLock(long time, TimeUnit unit) {
+
+            return lock(time,unit);
+        }
+
+        private boolean lock(long time, TimeUnit unit){
+            if(null == lockMutex){
+                throw new RuntimeException("初始化锁实例失败");
+            }
+            try {
+
+                return lockMutex.acquire(time, unit);
+            }catch (Exception e){
+                System.out.println(e.toString());
+                return false;
+            }
+        }
+
+        @Override
+        public void releaseLock() {
+
+            if(null != lockMutex){
+                try {
+                    lockMutex.release();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     @Override
     public boolean tryLock() {
@@ -74,14 +131,12 @@ public class CuratorLockImpl implements CuratorLock {
 
     public static void main(String[] args) {
 
-        final CuratorLock curatorLock = new CuratorLockImpl();
-
+        final CuratorLockImpl curatorLock = new CuratorLockImpl();
 
         int count =1;
-        final Task task = new Task(count,curatorLock);
 
-        for(int i=0;i<6;i++){
-
+        for(int i=0;i<8;i++){
+            final Task task = new Task(count,curatorLock);
             new Thread(task).start();
         }
     }
@@ -92,17 +147,27 @@ public class CuratorLockImpl implements CuratorLock {
 
         CuratorLock curatorLock;
 
-        public Task(int count,CuratorLock curatorLock){
+        LockInstance lockInstance;
+
+        public Task(int count,CuratorLockImpl curatorLock){
             this.count = count;
             this.curatorLock = curatorLock;
+            this.lockInstance = curatorLock.builderLockInstance("/"+UUID.randomUUID().toString());
+
         }
 
         @Override
         public void run() {
 
-            if(curatorLock.tryLock()){
+            if(lockInstance.tryLock()){
                 System.out.println(count++);
-                curatorLock.releaseLock();
+                try {
+                    Thread.sleep(1000);
+                    System.out.println("ok");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                lockInstance.releaseLock();
             }
         }
     }

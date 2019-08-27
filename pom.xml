@@ -63,6 +63,8 @@
             <artifactId>curator-recipes</artifactId>
             <version>${curator.version}</version>
         </dependency>
+
+
         <!-- dubbo相关 end -->
 
         <!-- spring  配置 -->
