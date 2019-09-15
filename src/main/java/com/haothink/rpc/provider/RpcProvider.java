@@ -1,6 +1,7 @@
 package com.haothink.rpc.provider;
 
 import com.haothink.rpc.RpcFrameworkV1;
+import com.haothink.rpc.RpcFrameworkV2;
 import com.haothink.rpc.service.HelloService;
 import com.haothink.rpc.service.HelloServiceImpl;
 
@@ -13,6 +14,6 @@ public class RpcProvider {
 
     public static void main(String[] args) throws Exception {
         HelloService service = new HelloServiceImpl();
-        RpcFrameworkV1.export(service, 1234);
+        RpcFrameworkV2.export(service, 1234);
     }
 }

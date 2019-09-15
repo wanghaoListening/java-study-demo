@@ -40,7 +40,7 @@ public class RpcFrameworkV2 {
         for(;;) {
             try {
                 final Socket socket = server.accept();
-                executorService.submit(new ServerTask(socket,service,port));
+                executorService.submit(new ServerTask(socket,service));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,12 +53,11 @@ public class RpcFrameworkV2 {
 
         private Object service;
 
-        private int port;
 
-        public ServerTask(Socket socket,final Object service, int port) {
+        public ServerTask(Socket socket,final Object service) {
             this.socket = socket;
             this.service = service;
-            this.port = port;
+
         }
 
 
