@@ -22,6 +22,11 @@ import java.util.regex.Pattern;
  **/
 public class JsonInterchXmlUtil {
 
+
+    private static final String XML_HEADER_SIGN = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+    private static final String RIGHT_ANGLE_BRACKET = ">";
+
     public static void main(String[] args) {
 
         String xml="<ROOT>"+
@@ -40,7 +45,12 @@ public class JsonInterchXmlUtil {
                 "</ROOT>";
 
 
-        System.out.println(xml2json(xml));
+        String jsonStr = xml2json(xml);
+        System.out.println(jsonStr);
+
+        System.out.println(json2xml(jsonStr));
+        System.out.println(json2xmlRemoveHeaderSign(jsonStr));
+        System.out.println(json2xmlReplaceBlank(jsonStr));
     }
 
 
@@ -68,10 +78,10 @@ public class JsonInterchXmlUtil {
         return output.toString();
     }
 
-    public static String json2xmlPay(String json) {
+    public static String json2xmlRemoveHeaderSign(String json) {
         String xmlStr = json2xml(json);
-        if (xmlStr.length() >= 38) {// remove <?xml version="1.0" encoding="UTF-8"?>
-            return "<xml>" + xmlStr.substring(39) + "</xml>";
+        if (null != xmlStr && xmlStr.startsWith(XML_HEADER_SIGN)) {// remove <?xml version="1.0" encoding="UTF-8"?>
+            return "<xml>"+xmlStr.substring(xmlStr.indexOf(RIGHT_ANGLE_BRACKET)+1) + "</xml>";
         }
         return xmlStr;
     }
