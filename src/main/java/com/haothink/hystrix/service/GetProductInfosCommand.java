@@ -8,8 +8,6 @@ import com.netflix.hystrix.HystrixObservableCommand;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +34,11 @@ public class GetProductInfosCommand extends HystrixObservableCommand<ProductInfo
             for (String productId : productIds) {
                 // 批量获取商品数据
                 String url = "http://localhost:8081/getProductInfo";
-                Map<String,Object> params = new HashMap<>();
+                Map<String,String> params = new HashMap<>();
                 params.put("productId",productId);
                 String response = null;
                 try {
-                    response = HttpClientUtils.httpGetRequest(url,params);
+                    response = HttpClientUtils.postParameters(url,params);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

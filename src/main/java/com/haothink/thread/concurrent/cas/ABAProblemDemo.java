@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicStampedReference;
 
 /**
- * @author wanghao
+ * @author wanghaoABAProblemDemo
  * @date 2019年07月08日 17:07
  * description: cas 中的ABA问题
  */

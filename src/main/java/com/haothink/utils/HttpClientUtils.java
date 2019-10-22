@@ -1,687 +1,345 @@
 package com.haothink.utils;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.security.GeneralSecurityException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.CharsetUtils;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 
 /**
- * @author wanghao
- * @date 2019年01月14日 14:43
- * description:
- */
+ * Created by wanghao on 2019-10-22
+ * mail:hiwanghaotime@qq.com
+ **/
 public class HttpClientUtils {
 
 
-    private static String EMPTY_STR = "";
-    private static String UTF_8 = "UTF-8";
-    private static RequestConfig requestConfig;
-    /**
-     * 设置连接超时时间 单位毫秒
-     */
-    private static final int CONN_TIME_OUT = 8000;
-    /**
-     * 请求超时时间
-     * 设置从connect Manager获取Connection 超时时间，单位毫秒
-     */
-    private static final int CONN_REQUEST_TIME_OUT = 10000;
-    /**
-     * 数据处理超时时间
-     * 请求获取数据的超时时间，单位毫秒。 如果访问一个接口，多少时间内无法返回数据
-     */
-    private static final int SOCKET_TIME_OUT = 60000;
-    /**
-     * 连接池的最大连接数
-     */
-    private static final int MAX_TOTAL_CONNECTION = 200;
-    /**
-     * 每个路由的最大连接数
-     */
-    private static final int MAX_CONNECTION_PER_ROUTE = 100;
-    private static final String HTTP_PREFIX = "HTTP";
-    private static final String HTTP_HEADER = "HTTP:";
-    private static final String JSONP_CALLBACK = "callback";
-    private static CloseableHttpClient closeableHttpClient;
-    private static final String HTTP_SPLIT = "//";
-
-    private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
+    public static final int connTimeout=10000;
+    public static final int readTimeout=10000;
+    public static final String charset="UTF-8";
+    private static HttpClient client = null;
 
     static {
-
-        //定义 http连接的 策略  可以允许 http和 https
-        ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-        LayeredConnectionSocketFactory sslsf = createSSLConnSocketFactory();
-        Registry<ConnectionSocketFactory> registry = RegistryBuilder
-                .<ConnectionSocketFactory>create().register("http", plainsf)
-                .register("https", sslsf).build();
-
-        //初始化http请求池
-        PoolingHttpClientConnectionManager cm;
-        cm = new PoolingHttpClientConnectionManager(registry);
-        cm.setMaxTotal(MAX_TOTAL_CONNECTION);
-        cm.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
-        closeableHttpClient = HttpClients
-                .custom()
-                .setConnectionManager(cm)
-                .build();
-
-        //初始化请求参数
-        requestConfig = RequestConfig.custom()
-                .setConnectTimeout(CONN_TIME_OUT)
-                .setConnectionRequestTimeout(CONN_REQUEST_TIME_OUT)
-                .setSocketTimeout(SOCKET_TIME_OUT)
-                .build();
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(128);
+        cm.setDefaultMaxPerRoute(128);
+        client = HttpClients.custom().setConnectionManager(cm).build();
     }
 
+    public static String postParameters(String url, String parameterStr) throws ConnectTimeoutException, SocketTimeoutException, Exception{
+        return post(url,parameterStr,"application/x-www-form-urlencoded",charset,connTimeout,readTimeout);
+    }
+
+    public static String postParameters(String url, String parameterStr,String charset, Integer connTimeout, Integer readTimeout) throws ConnectTimeoutException, SocketTimeoutException, Exception{
+        return post(url,parameterStr,"application/x-www-form-urlencoded",charset,connTimeout,readTimeout);
+    }
+
+    public static String postParameters(String url, Map<String, String> params) throws ConnectTimeoutException,
+            SocketTimeoutException, Exception {
+        return postForm(url, params, null, connTimeout, readTimeout);
+    }
+
+    public static String postParameters(String url, Map<String, String> params, Integer connTimeout,Integer readTimeout) throws ConnectTimeoutException,
+            SocketTimeoutException, Exception {
+        return postForm(url, params, null, connTimeout, readTimeout);
+    }
+
+    public static String get(String url) throws Exception {
+        return get(url, charset, null, null);
+    }
+
+    public static String get(String url, String charset) throws Exception {
+        return get(url, charset, connTimeout, readTimeout);
+    }
 
     /**
-     * 通过连接池获取HttpClient
-     *
-     * @return
-     */
-    private static CloseableHttpClient getHttpClient() {
-        return closeableHttpClient;
-    }
-
-    public static String httpGetRequest(String url) throws IOException {
-        return httpGetRequest(url, UTF_8);
-    }
-
-
-    public static String httpGetRequest(String url, String charSet) throws IOException {
-        HttpGet httpGet = buildHttpGet(url);
-        return getResult(httpGet, charSet);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> params) throws URISyntaxException, IOException {
-        return httpGetRequest(url, params, UTF_8);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> params, List<BasicClientCookie> cookieList) throws URISyntaxException, IOException {
-        return httpGetRequest(url, params, UTF_8, cookieList);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> params, String charSet) throws URISyntaxException, IOException {
-        return httpGetRequest(url, params, charSet, null);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> params, String charSet, List<BasicClientCookie> cookieList) throws URISyntaxException, IOException {
-        URIBuilder ub = new URIBuilder();
-        ub.setPath(processURL(url));
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        ub.setParameters(pairs);
-
-        HttpGet httpGet = new HttpGet(ub.build());
-
-        //处理cookie
-        HttpContext httpContext = processCookie(cookieList);
-
-        return getResult(httpGet, charSet, httpContext);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> headers, Map<String, Object> params) throws URISyntaxException, IOException {
-        return httpGetRequest(url, headers, params, UTF_8);
-    }
-
-    public static String httpJsonpGetRequest(String url, Map<String, Object> headers, Map<String, Object> params) throws URISyntaxException, IOException {
-        params.put(JSONP_CALLBACK, JSONP_CALLBACK);
-        String result = httpGetRequest(url, headers, params, UTF_8);
-        return getJsonString(result, JSONP_CALLBACK);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> headers, Map<String, Object> params, String charSet, List<BasicClientCookie> cookieList) throws URISyntaxException, IOException {
-        URIBuilder ub = new URIBuilder();
-        ub.setPath(processURL(url));
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        ub.setParameters(pairs);
-
-        HttpGet httpGet = new HttpGet(ub.build());
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpGet.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-
-        //处理cookie
-        HttpContext httpContext = processCookie(cookieList);
-
-        return getResult(httpGet, charSet, httpContext);
-    }
-
-    public static String httpGetRequest(String url, Map<String, Object> headers, Map<String, Object> params, String charSet) throws URISyntaxException, IOException {
-        URIBuilder ub = new URIBuilder();
-        ub.setPath(processURL(url));
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        ub.setParameters(pairs);
-
-        HttpGet httpGet = new HttpGet(ub.build());
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpGet.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-        return getResult(httpGet, charSet);
-    }
-
-
-    public static String httpGetRequestSSL(String url, Map<String, Object> headers, Map<String, Object> params) throws Exception {
-        return httpGetRequestSSL(url, headers, params, UTF_8);
-    }
-
-    public static String httpGetRequestSSL(String url, Map<String, Object> headers, Map<String, Object> params, String charSet) throws Exception {
-        URIBuilder ub = new URIBuilder();
-        ub.setPath(processURL(url));
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        ub.setParameters(pairs);
-
-        HttpGet httpGet = new HttpGet(ub.build());
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpGet.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-
-        return getSSLResult(httpGet, charSet);
-    }
-
-    public static String httpPostRequest(String url) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        return getResult(httpPost, UTF_8);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> params) throws IOException {
-        return httpPostRequest(url, params, UTF_8);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> params, String charSet) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-        return getResult(httpPost, charSet);
-    }
-
-
-    public static String httpPostRequest(String url, String data, String contentType) throws IOException {
-        return httpPostRequest(url, data, contentType, UTF_8);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> headers, String data, String contentType) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-        return getResult(httpPost, UTF_8);
-    }
-
-
-    public static String httpPostRequest(String url, String data, String contentType, String charSet) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-        return getResult(httpPost, charSet);
-    }
-
-    public static String httpPostRequest(String url, String data, String contentType, String charSet, RequestConfig requestConfig) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-        return getResult(httpPost, charSet, requestConfig);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params) throws IOException {
-        return httpPostRequest(url, headers, params, UTF_8);
-    }
-
-    public static String httpJsonpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params) throws IOException {
-        params.put(JSONP_CALLBACK, JSONP_CALLBACK);
-        String result = httpPostRequest(url, headers, params, UTF_8);
-        return getJsonString(result, JSONP_CALLBACK);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params, List<BasicClientCookie> cookieList) throws IOException {
-        return httpPostRequest(url, headers, params, UTF_8, cookieList);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params, String charSet) throws IOException {
-        return httpPostRequest(url, headers, params, charSet, null);
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params, String charSet, List<BasicClientCookie> cookieList) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-
-        //处理cookie
-        HttpContext httpContext = processCookie(cookieList);
-
-        return getResult(httpPost, charSet, httpContext);
-    }
-
-    public static String httpPostRequestSSL(String url, Map<String, Object> headers, Map<String, Object> params) throws Exception {
-        return httpPostRequestSSL(url, headers, params, UTF_8);
-    }
-
-
-    public static String httpPostRequestSSL(String url, Map<String, Object> headers, Map<String, Object> params, String charSet) throws Exception {
-        HttpPost httpPost = buildHttpPost(url);
-
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-
-        return getSSLResult(httpPost, charSet);
-    }
-
-    public static String httpPostRequestSSL(String url, Map<String, Object> headers, String data, String contentType) throws Exception {
-        HttpPost httpPost = buildHttpPost(url);
-
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-
-        return getSSLResult(httpPost, UTF_8);
-    }
-
-
-
-    /**
-     * Http get请求
-     * 使用代理
+     * 发送一个 Post 请求, 使用指定的字符集编码.
      *
      * @param url
-     * @param headers
-     * @param params
-     * @param charSet
-     * @param proxyHost
-     * @param proxyPort
-     * @return
-     * @throws URISyntaxException
-     * @throws IOException
+     * @param body RequestBody
+     * @param mimeType 例如 application/xml "application/x-www-form-urlencoded" a=1&b=2&c=3
+     * @param charset 编码
+     * @param connTimeout 建立链接超时时间,毫秒.
+     * @param readTimeout 响应超时时间,毫秒.
+     * @return ResponseBody, 使用指定的字符集编码.
+     * @throws ConnectTimeoutException 建立链接超时异常
+     * @throws SocketTimeoutException  响应超时
+     * @throws Exception
      */
-    public static String httpGetRequestWithProxy(String url, Map<String, Object> headers, Map<String, Object> params, String charSet, String proxyHost, Integer proxyPort) throws URISyntaxException, IOException {
+    public static String post(String url, String body, String mimeType,String charset, Integer connTimeout, Integer readTimeout)
+            throws ConnectTimeoutException, SocketTimeoutException, Exception {
+        HttpClient client = null;
+        HttpPost post = new HttpPost(url);
+        String result = "";
+        try {
+            if (StringUtils.isNotBlank(body)) {
+                HttpEntity entity = new StringEntity(body, ContentType.create(mimeType, charset));
+                post.setEntity(entity);
+            }
+            // 设置参数
+            Builder customReqConf = RequestConfig.custom();
+            if (connTimeout != null) {
+                customReqConf.setConnectTimeout(connTimeout);
+            }
+            if (readTimeout != null) {
+                customReqConf.setSocketTimeout(readTimeout);
+            }
+            post.setConfig(customReqConf.build());
 
-        RequestConfig config = buildRequestConfigWithProxy(proxyHost, proxyPort);
-        URIBuilder ub = new URIBuilder();
-        ub.setPath(processURL(url));
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        ub.setParameters(pairs);
-
-        HttpGet httpGet = new HttpGet(ub.build());
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpGet.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-        return getResult(httpGet, charSet, null, config);
-    }
-
-
-    /**
-     * Http post请求
-     * 使用代理
-     *
-     * @param url
-     * @param data
-     * @param contentType
-     * @param charSet
-     * @param proxyHost
-     * @param proxyPort
-     * @return
-     * @throws IOException
-     */
-    public static String httpPostRequestWithProxy(String url, String data, String contentType, String charSet, String proxyHost, Integer proxyPort) throws IOException {
-        RequestConfig config = buildRequestConfigWithProxy(proxyHost, proxyPort);
-        HttpPost httpPost = buildHttpPost(url);
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-        return getResult(httpPost, charSet, config);
-    }
-
-    /**
-     * Http post请求
-     * 使用代理
-     *
-     * @param url
-     * @param data
-     * @param contentType
-     * @param proxyHost
-     * @param proxyPort
-     * @return
-     * @throws IOException
-     */
-    public static String httpPostRequestWithProxy(String url, Map<String, Object> headers, String data, String contentType, String proxyHost, Integer proxyPort) throws IOException {
-        RequestConfig config = buildRequestConfigWithProxy(proxyHost, proxyPort);
-        HttpPost httpPost = buildHttpPost(url);
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-        StringEntity stringEntity = new StringEntity(data, ContentType.create(contentType, Consts.UTF_8));
-        httpPost.setEntity(stringEntity);
-        return getResult(httpPost, UTF_8, config);
-    }
-
-    /**
-     * Http post请求
-     * 使用代理
-     * @param url
-     * @param params
-     * @param headers
-     * @param charSet
-     * @param proxyHost
-     * @param proxyPort
-     * @return
-     * @throws IOException
-     */
-    public static String httpPostRequestWithProxy(String url, Map<String, Object> params, Map<String, Object> headers,String charSet,String proxyHost, Integer proxyPort) throws IOException {
-        RequestConfig config = buildRequestConfigWithProxy(proxyHost, proxyPort);
-        HttpPost httpPost = buildHttpPost(url);
-
-        for (Map.Entry<String, Object> param : headers.entrySet()) {
-            httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
-        }
-
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-        return getResult(httpPost, charSet,config);
-    }
-
-    /**
-     * 构建 RequestConfig 并配置proxy参数
-     *
-     * @param proxyHost
-     * @param proxyPort
-     * @return
-     */
-    private static RequestConfig buildRequestConfigWithProxy(String proxyHost, Integer proxyPort) {
-        HttpHost proxy = null;
-        if (proxyHost != null && proxyPort != null) {
-            proxy = new HttpHost(proxyHost, proxyPort);
-        }
-        return RequestConfig.custom()
-                .setConnectTimeout(CONN_TIME_OUT)
-                .setConnectionRequestTimeout(CONN_REQUEST_TIME_OUT)
-                .setSocketTimeout(SOCKET_TIME_OUT)
-                .setProxy(proxy)
-                .build();
-    }
-
-    private static ArrayList<NameValuePair> covertParams2NVPS(Map<String, Object> params) {
-        ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, Object> param : params.entrySet()) {
-            pairs.add(new BasicNameValuePair(param.getKey(), String.valueOf(param.getValue())));
-        }
-
-        return pairs;
-    }
-
-    public static String httpPostRequest(String url, Map<String, Object> params, String charSet, boolean isNullToString) throws IOException {
-        HttpPost httpPost = buildHttpPost(url);
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params, isNullToString);
-
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-        return getResult(httpPost, charSet);
-    }
-
-    private static ArrayList<NameValuePair> covertParams2NVPS(Map<String, Object> params, boolean isNullToString) {
-        ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, Object> param : params.entrySet()) {
-            Object object = param.getValue();
-            if (object == null && !isNullToString) {
-                pairs.add(new BasicNameValuePair(param.getKey(), null));
+            HttpResponse res;
+            if (url.startsWith("https")) {
+                // 执行 Https 请求.
+                client = createSSLInsecureClient();
+                res = client.execute(post);
             } else {
-                pairs.add(new BasicNameValuePair(param.getKey(), String.valueOf(param.getValue())));
+                // 执行 Http 请求.
+                client = HttpClientUtils.client;
+                res = client.execute(post);
+            }
+            result = IOUtils.toString(res.getEntity().getContent(), charset);
+        } finally {
+            post.releaseConnection();
+            if (url.startsWith("https") && client != null&& client instanceof CloseableHttpClient) {
+                ((CloseableHttpClient) client).close();
             }
         }
-
-        return pairs;
+        return result;
     }
 
+
     /**
-     * 创建SSL安全连接
+     * 提交form表单
      *
+     * @param url
+     * @param params
+     * @param connTimeout
+     * @param readTimeout
+     * @return
+     * @throws ConnectTimeoutException
+     * @throws SocketTimeoutException
+     * @throws Exception
+     */
+    public static String postForm(String url, Map<String, String> params, Map<String, String> headers, Integer connTimeout,Integer readTimeout) throws ConnectTimeoutException,
+            SocketTimeoutException, Exception {
+
+        HttpClient client = null;
+        HttpPost post = new HttpPost(url);
+        try {
+            if (params != null && !params.isEmpty()) {
+                List<NameValuePair> formParams = new ArrayList<org.apache.http.NameValuePair>();
+                Set<Entry<String, String>> entrySet = params.entrySet();
+                for (Entry<String, String> entry : entrySet) {
+                    formParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+                UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formParams, Consts.UTF_8);
+                post.setEntity(entity);
+            }
+
+            if (headers != null && !headers.isEmpty()) {
+                for (Entry<String, String> entry : headers.entrySet()) {
+                    post.addHeader(entry.getKey(), entry.getValue());
+                }
+            }
+            // 设置参数
+            Builder customReqConf = RequestConfig.custom();
+            if (connTimeout != null) {
+                customReqConf.setConnectTimeout(connTimeout);
+            }
+            if (readTimeout != null) {
+                customReqConf.setSocketTimeout(readTimeout);
+            }
+            post.setConfig(customReqConf.build());
+            HttpResponse res = null;
+            if (url.startsWith("https")) {
+                // 执行 Https 请求.
+                client = createSSLInsecureClient();
+                res = client.execute(post);
+            } else {
+                // 执行 Http 请求.
+                client = HttpClientUtils.client;
+                res = client.execute(post);
+            }
+            return IOUtils.toString(res.getEntity().getContent(), "UTF-8");
+        } finally {
+            post.releaseConnection();
+            if (url.startsWith("https") && client != null
+                    && client instanceof CloseableHttpClient) {
+                ((CloseableHttpClient) client).close();
+            }
+        }
+    }
+
+
+
+
+    /**
+     * 发送一个 GET 请求
+     *
+     * @param url
+     * @param charset
+     * @param connTimeout  建立链接超时时间,毫秒.
+     * @param readTimeout  响应超时时间,毫秒.
+     * @return
+     * @throws ConnectTimeoutException   建立链接超时
+     * @throws SocketTimeoutException   响应超时
+     * @throws Exception
+     */
+    public static String get(String url, String charset, Integer connTimeout,Integer readTimeout)
+            throws ConnectTimeoutException,SocketTimeoutException, Exception {
+
+        HttpClient client = null;
+        HttpGet get = new HttpGet(url);
+        String result = "";
+        try {
+            // 设置参数
+            Builder customReqConf = RequestConfig.custom();
+            if (connTimeout != null) {
+                customReqConf.setConnectTimeout(connTimeout);
+            }
+            if (readTimeout != null) {
+                customReqConf.setSocketTimeout(readTimeout);
+            }
+            get.setConfig(customReqConf.build());
+
+            HttpResponse res = null;
+
+            if (url.startsWith("https")) {
+                // 执行 Https 请求.
+                client = createSSLInsecureClient();
+                res = client.execute(get);
+            } else {
+                // 执行 Http 请求.
+                client = HttpClientUtils.client;
+                res = client.execute(get);
+            }
+
+            result = IOUtils.toString(res.getEntity().getContent(), charset);
+        } finally {
+            get.releaseConnection();
+            if (url.startsWith("https") && client != null && client instanceof CloseableHttpClient) {
+                ((CloseableHttpClient) client).close();
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 从 response 里获取 charset
+     *
+     * @param ressponse
      * @return
      */
-    private static SSLConnectionSocketFactory createSSLConnSocketFactory() {
-        SSLConnectionSocketFactory sslsf = null;
+    @SuppressWarnings("unused")
+    private static String getCharsetFromResponse(HttpResponse ressponse) {
+        // Content-Type:text/html; charset=GBK
+        if (ressponse.getEntity() != null  && ressponse.getEntity().getContentType() != null && ressponse.getEntity().getContentType().getValue() != null) {
+            String contentType = ressponse.getEntity().getContentType().getValue();
+            if (contentType.contains("charset=")) {
+                return contentType.substring(contentType.indexOf("charset=") + 8);
+            }
+        }
+        return null;
+    }
+
+
+
+    /**
+     * 创建 SSL连接
+     * @return
+     * @throws GeneralSecurityException
+     */
+    private static CloseableHttpClient createSSLInsecureClient() throws GeneralSecurityException {
         try {
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                public boolean isTrusted(X509Certificate[] chain,String authType) throws CertificateException {
                     return true;
                 }
             }).build();
-            sslsf = new SSLConnectionSocketFactory(sslContext, new X509HostnameVerifier() {
+
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new X509HostnameVerifier() {
+
                 @Override
                 public boolean verify(String arg0, SSLSession arg1) {
                     return true;
                 }
 
                 @Override
-                public void verify(String host, SSLSocket ssl) throws IOException {
+                public void verify(String host, SSLSocket ssl)
+                        throws IOException {
                 }
 
                 @Override
-                public void verify(String host, X509Certificate cert) throws SSLException {
+                public void verify(String host, X509Certificate cert)
+                        throws SSLException {
                 }
 
                 @Override
-                public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
+                public void verify(String host, String[] cns,
+                                   String[] subjectAlts) throws SSLException {
                 }
+
             });
-        } catch (Exception e) {
-            logger.error("createSSLConnSocketFactory异常", e);
-        }
-        return sslsf;
-    }
 
+            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
-    /**
-     * 处理Http请求
-     *
-     * @param request
-     * @return
-     */
-    private static String getResult(HttpRequestBase request, String charSet) throws IOException {
-        return getResult(request, charSet, null, requestConfig);
-    }
-
-
-    /**
-     * 处理Http请求
-     *
-     * @param request
-     * @return
-     */
-    private static String getResult(HttpRequestBase request, String charSet, HttpContext httpContext) throws IOException {
-        return getResult(request, charSet, httpContext, requestConfig);
-    }
-
-
-    /**
-     * 处理Http请求
-     *
-     * @param request
-     * @return
-     */
-    private static String getResult(HttpRequestBase request, String charSet, RequestConfig requestConfig) throws IOException {
-        return getResult(request, charSet, null, requestConfig);
-    }
-
-
-    /**
-     * 处理Http请求
-     *
-     * @param request
-     * @return
-     */
-    private static String getResult(HttpRequestBase request, String charSet, HttpContext httpContext, RequestConfig requestConfig) throws IOException {
-        Transaction t = null;
-        try {
-            String name = request.getURI().toString();
-            if (name.indexOf("?") != -1) {
-                name = name.substring(0, name.indexOf("?"));
-            }
-            t = Cat.newTransaction(CatConstants.TYPE_REQUEST, name);
-        } catch (Exception e) {
-            logger.error("cat Transaction init error", e);
-        }
-
-        try {
-            request.setConfig(requestConfig);
-            CloseableHttpClient httpClient = getHttpClient();
-            CloseableHttpResponse response = httpClient.execute(request, httpContext);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String result = EntityUtils.toString(entity, charSet);
-                response.close();
-                if (null != t) {
-                    t.setStatus(Message.SUCCESS);
-                }
-                return result;
-            }
-        } catch (Exception e){
-            if (null != t) {
-                t.setStatus(e);
-            }
+        } catch (GeneralSecurityException e) {
             throw e;
-        } finally {
-            if (null != t) {
-                t.complete();
-            }
-        }
-        return EMPTY_STR;
-    }
-
-    /**
-     * 处理Http请求
-     *
-     * @param request
-     * @return
-     */
-    private static String getSSLResult(HttpRequestBase request, String charSet) throws Exception {
-        return getResult(request, charSet, null, requestConfig);
-    }
-
-    private static HttpPost buildHttpPost(String url) {
-        return new HttpPost(processURL(url));
-    }
-
-    private static HttpGet buildHttpGet(String url) {
-        return new HttpGet(processURL(url));
-    }
-
-    private static String processURL(String url) {
-        if (StringUtils.isBlank(url)) {
-            return url;
-        }
-        String upperUrl = url.toUpperCase();
-        if (upperUrl.startsWith(HTTP_PREFIX)) {
-            return url;
-        } else if (upperUrl.startsWith(HTTP_SPLIT)) {
-            return HTTP_HEADER + url;
-        } else {
-            return HTTP_HEADER + HTTP_SPLIT + url;
         }
     }
 
-    private static HttpContext processCookie(List<BasicClientCookie> cookieList) {
-        HttpContext httpContext = null;
-        if (CollectionUtils.isNotEmpty(cookieList)) {
-            httpContext = new BasicHttpContext();
-            BasicCookieStore cookieStore = new BasicCookieStore();
-            BasicClientCookie[] array = new BasicClientCookie[cookieList.size()];
-            cookieStore.addCookies(cookieList.toArray(array));
-            httpContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+    public static void main(String[] args) {
+        try {
+            String str= post("https://localhost:443/ssl/test.shtml","name=12&page=34","application/x-www-form-urlencoded", "UTF-8", 10000, 10000);
+            //String str= get("https://localhost:443/ssl/test.shtml?name=12&page=34","GBK");
+            /*Map<String,String> map = new HashMap<String,String>();
+            map.put("name", "111");
+            map.put("page", "222");
+            String str= postForm("https://localhost:443/ssl/test.shtml",map,null, 10000, 10000);*/
+            System.out.println(str);
+        } catch (ConnectTimeoutException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SocketTimeoutException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        return httpContext;
     }
-
-
-
-
-    public static HttpPost getPost(String url, Map<String, Object> params) throws Exception {
-        HttpPost httpPost = buildHttpPost(url);
-        ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
-        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
-
-        return httpPost;
-
-    }
-
-    private static String getJsonString(String resultStr, String callback) {
-        if (StringUtils.isNotEmpty(resultStr) && StringUtils.isNotEmpty(callback)) {
-            int index = callback.indexOf(callback);
-            if (index > -1 && resultStr.length() > callback.length()) {
-                resultStr = resultStr.substring(callback.length() + 1, resultStr.length() - 1);
-            }
-        }
-        return resultStr;
-    }
-
 }

@@ -52,9 +52,9 @@ public class GetProductInfoCommand extends HystrixCommand<ProductInfoBO> {
     protected ProductInfoBO run() throws Exception {
         String url = "http://localhost:8081/getProductInfo";
         // 调用商品服务接口
-        Map<String,Object> params = new HashMap<>();
-        params.put("productId",productId);
-        String response = HttpClientUtils.httpGetRequest(url,params);
+        Map<String,String> params = new HashMap<>();
+        params.put("productId",productId+"");
+        String response = HttpClientUtils.postParameters(url,params);
         return JSONObject.parseObject(response, ProductInfoBO.class);
     }
 
