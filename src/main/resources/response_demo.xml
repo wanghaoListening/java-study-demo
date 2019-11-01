@@ -1,0 +1,26 @@
+<Application application_number="1" callsubtype="00" calltimestemp="" calltype="call10" date="2019-11-01">
+  <Applicant>
+    <Off_Passenger O_P_aCardScoreV2OfflineScore="617" O_P_appLoanSubCategoryNumber="1" O_P_isFastOrGulfDriver="1" O_P_last1YearNotPayOrders="2" O_P_last3MonthImeiNum="1" O_P_pasIsDriver="1" O_P_pasStatus="0" O_P_registMonths="12" O_P_riskLevelXwV1="1" O_P_riskLevelXwV2="2"></Off_Passenger>
+    <Off_Driver O_D_beatlesCreditScore="50" O_D_last6MonthBeatlesArriveCnt="34" O_D_last6MonthBeatlesPasComplaintRate="0.01"></Off_Driver>
+    <Black L_isUidBlacklist="1"></Black>
+  </Applicant>
+  <Random_Num></Random_Num>
+  <InvokeResult InvokeStatusCode="0" InvokeStatusDescription="Success"></InvokeResult>
+  <PassResult Result="0"></PassResult>
+  <OutputFeatures>
+    <RulesetResults reasoncode="TMP002" reasonmessage="测试2下" rulename="测试分规则" ruleresult="D" rulesetname="临时测试规则集"></RulesetResults>
+    <RulesetResults reasoncode="TMP001" reasonmessage="测试一下" rulename="测试规则" ruleresult="D" rulesetname="临时测试规则集"></RulesetResults>
+    <ScoreResults characteristiccount="7" initialscore="0.0" score="567.0" scoremodelname="三方评分卡A卡" unexpectedcount="7">
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="云从_全息小额分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="冰鉴_标准版星宇分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="冰鉴_慧眼分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="瑞莱_大额分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="瑞莱_购物分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="天御_反欺诈_信用卡分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="天御_反欺诈_小额短贷分" maxbinscore="0.0" partialscore="0.0" unexpected="true" weight="0.0"></Characteristics>
+    </ScoreResults>
+	<ScoreResults characteristiccount="1" initialscore="0.0" score="90.0" scoremodelname="临时评分卡" unexpectedcount="1">
+      <Characteristics baselinescore="0.0" binlable="所有其它" charactername="申请编号" maxbinscore="20.0" partialscore="-10.0" unexpected="true" weight="0.0"></Characteristics>
+    </ScoreResults>
+  </OutputFeatures>
+</Application>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Application application_number="1" application_date="2019-11-01" calltype="call10" callsubtype="00" calltimestemp="2019-11-01 12:15:33.473">
+	<Applicant>
+		<Off_Passenger O_P_aCardScoreV2OfflineScore="617" O_P_last1YearNotPayOrders="2" O_P_last3MonthImeiNum="1" O_P_pasIsDriver="1"  O_P_registMonths="12" O_P_appLoanSubCategoryNumber="1" O_P_isFastOrGulfDriver="1" O_P_pasStatus="0" O_P_riskLevelXwV1="1" O_P_riskLevelXwV2="2"/>
+		<Off_Driver  O_D_beatlesCreditScore="50" O_D_last6MonthBeatlesArriveCnt="34" O_D_last6MonthBeatlesPasComplaintRate="0.01"/>
+		<Black L_isUidBlacklist="1"/>		
+	</Applicant>
+</Application>
+
