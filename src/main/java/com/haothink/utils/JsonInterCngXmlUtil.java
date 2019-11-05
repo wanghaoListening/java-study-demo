@@ -2,19 +2,23 @@ package com.haothink.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.haothink.dom4j.XmlParserDemo;
 import de.odysseus.staxon.json.JsonXMLConfig;
 import de.odysseus.staxon.json.JsonXMLConfigBuilder;
 import de.odysseus.staxon.json.JsonXMLInputFactory;
 import de.odysseus.staxon.json.JsonXMLOutputFactory;
 import de.odysseus.staxon.xml.util.PrettyXMLEventWriter;
+import org.apache.commons.io.IOUtils;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -31,28 +35,16 @@ public class JsonInterCngXmlUtil {
 
     private static final String RIGHT_ANGLE_BRACKET = ">";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        String xml="<ROOT>"+
-                "<Status>00</Status>"+
-                "<ErrorMsg></ErrorMsg>"+
-                "<Data>"+
-                "<Row>"+
-                "<PERSONID>35020500200610000000000701355116</PERSONID>"+
-                "<XM>王浩1</XM><SFZH>350624198908052530</SFZH>"+
-                "</Row>"+
-                "<Row>"+
-                "<PERSONID>35020500200610000000000701355117</PERSONID>"+
-                "<XM>王浩2</XM><SFZH>350624198908052531</SFZH>"+
-                "</Row>"+
-                "</Data>"+
-                "</ROOT>";
+        InputStream inputStream = XmlParserDemo.class.getClassLoader().getResourceAsStream("response_demo2.xml");
+
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
+        String xml = writer.toString();
+        System.out.println(xml2json(xml));
 
 
-        String json ="{\"a\":{\"b\":\"bvalue\",\"c\":\"cvalue\",\"d\":{\"dm\":\"dmvalue\"}}}\n";
-
-        System.out.println(json2Map(json));
-        System.out.println(xml2Map(xml));
     }
 
 

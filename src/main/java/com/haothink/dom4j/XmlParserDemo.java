@@ -1,6 +1,8 @@
 package com.haothink.dom4j;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.*;
 
@@ -19,13 +21,15 @@ public class XmlParserDemo {
 
     public static void main(String[] args) throws IOException, DocumentException {
 
-        InputStream inputStream = XmlParserDemo.class.getClassLoader().getResourceAsStream("response_demo.xml");
+        InputStream inputStream = XmlParserDemo.class.getClassLoader().getResourceAsStream("response_demo2.xml");
 
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
         Map<String, Object> map = xml2Map(xml);
+        Multimap<String, Object> mutiValueMap = xml2MutiValueMap(xml);
         System.out.println(JSONObject.toJSONString(map));
+        System.out.println(mutiValueMap.toString());
         System.out.println(map2Xml(map,"Application"));
     }
 
@@ -50,6 +54,17 @@ public class XmlParserDemo {
         Element root = doc.getRootElement();
         return Dom2Map(root);
     }
+
+    public static Multimap<String, Object> xml2MutiValueMap(String xml) throws DocumentException {
+        if (xml == null || "".equals(xml)) {
+            return null;
+        }
+        Document doc = DocumentHelper.parseText(xml);
+        Element root = doc.getRootElement();
+        return Dom2MutiValueMap(root);
+    }
+
+
 
 
 
@@ -77,10 +92,47 @@ public class XmlParserDemo {
 
     private static Map<String, Object> Dom2Map(Element root) {
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new IdentityHashMap<>();
 
         for (Iterator iterator = root.elementIterator(); iterator.hasNext(); ) {
-            Map<String, Object> eleMap = new HashMap<>();
+            Map<String, Object> eleMap = new IdentityHashMap<>();
+            Element e = (Element) iterator.next();
+            List attributeList = e.attributes();
+            for (Object o : attributeList) {
+                if (o instanceof Attribute) {
+                    Attribute attribute = (Attribute) o;
+                    eleMap.put(attribute.getName(), attribute.getValue());
+                }
+            }
+            List elements = e.elements();
+            if (elements.size() > 0) {
+                //将子元素继续执行
+                for(Object o : elements) {
+                    Element childEle = (Element)o;
+                    eleMap.put(childEle.getName(), Dom2Map(childEle));
+                }
+            }
+            map.put(e.getName(), eleMap);
+        }
+        //将当前标签的属性装载到子标签同级别的map当中
+        List attributeList = root.attributes();
+        for (Object o : attributeList) {
+            if (o instanceof Attribute) {
+                Attribute attribute = (Attribute) o;
+                map.put(attribute.getName(), attribute.getValue());
+            }
+        }
+
+        return map;
+    }
+
+
+    private static Multimap<String, Object> Dom2MutiValueMap(Element root) {
+
+        Multimap<String, Object> map = LinkedHashMultimap.create();
+
+        for (Iterator iterator = root.elementIterator(); iterator.hasNext(); ) {
+            Multimap<String, Object> eleMap = LinkedHashMultimap.create();
             Element e = (Element) iterator.next();
             List attributeList = e.attributes();
             for (Object o : attributeList) {
