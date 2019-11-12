@@ -21,16 +21,13 @@ public class XmlParserDemo {
 
     public static void main(String[] args) throws IOException, DocumentException {
 
-        InputStream inputStream = XmlParserDemo.class.getClassLoader().getResourceAsStream("response_demo2.xml");
+        InputStream inputStream = XmlParserDemo.class.getClassLoader().getResourceAsStream("request_demo.xml");
 
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
         Map<String, Object> map = xml2Map(xml);
-        Multimap<String, Object> mutiValueMap = xml2MutiValueMap(xml);
-        System.out.println(JSONObject.toJSONString(map));
-        System.out.println(mutiValueMap.toString());
-        System.out.println(map2Xml(map,"Application"));
+        System.out.println(map);
     }
 
 

@@ -42,7 +42,9 @@ public class JsonInterCngXmlUtil {
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
-        System.out.println(xml2json(xml));
+        String json = xml2json(xml);
+        System.out.println(json.replaceAll("(@)([a-zA-Z0-9_]+\"\\s*:)","$2"));
+
 
 
     }
