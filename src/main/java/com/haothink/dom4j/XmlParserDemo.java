@@ -1,5 +1,7 @@
 package com.haothink.dom4j;
 
+
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -27,7 +29,9 @@ public class XmlParserDemo {
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
         Map<String, Object> map = xml2Map(xml);
-        System.out.println(map);
+        System.out.println(JSONObject.toJSONString(map));
+
+        System.out.println(map2Xml(map,"Application"));
     }
 
 
@@ -119,7 +123,6 @@ public class XmlParserDemo {
                 map.put(attribute.getName(), attribute.getValue());
             }
         }
-
         return map;
     }
 

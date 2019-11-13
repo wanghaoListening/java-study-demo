@@ -3,12 +3,15 @@ package com.haothink.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.haothink.dom4j.XmlParserDemo;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import de.odysseus.staxon.json.JsonXMLConfig;
 import de.odysseus.staxon.json.JsonXMLConfigBuilder;
 import de.odysseus.staxon.json.JsonXMLInputFactory;
 import de.odysseus.staxon.json.JsonXMLOutputFactory;
 import de.odysseus.staxon.xml.util.PrettyXMLEventWriter;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.JsonNode;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -43,10 +46,13 @@ public class JsonInterCngXmlUtil {
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
         String json = xml2json(xml);
-        System.out.println(json.replaceAll("(@)([a-zA-Z0-9_]+\"\\s*:)","$2"));
+        JsonNode jsonNode = JacksonJsonUtil.parseJsonObject(json);
+        System.out.println(jsonNode);
 
+        Object blazeResponseObj = Configuration.defaultConfiguration().jsonProvider().parse(json);
 
-
+        Map<String,Object> invokeStatus = JsonPath.read(blazeResponseObj,"$.Application.ScoreResults");
+        System.out.println(invokeStatus.get("SubScoreResult").getClass());
     }
 
 

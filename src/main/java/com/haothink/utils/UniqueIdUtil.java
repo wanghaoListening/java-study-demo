@@ -1,6 +1,5 @@
 package com.haothink.utils;
 
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
