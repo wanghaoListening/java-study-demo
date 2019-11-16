@@ -46,8 +46,6 @@ public class JsonInterCngXmlUtil {
         IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8.name());
         String xml = writer.toString();
         String json = xml2json(xml);
-        JsonNode jsonNode = JacksonJsonUtil.parseJsonObject(json);
-        System.out.println(jsonNode);
 
         Object blazeResponseObj = Configuration.defaultConfiguration().jsonProvider().parse(json);
 
