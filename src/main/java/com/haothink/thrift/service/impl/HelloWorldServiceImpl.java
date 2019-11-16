@@ -1,5 +1,6 @@
 package com.haothink.thrift.service.impl;
 
+import com.haothink.thrift.service.HelloWorldService;
 import org.apache.thrift.TException;
 
 /**
