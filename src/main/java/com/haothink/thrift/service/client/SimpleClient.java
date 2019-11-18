@@ -1,11 +1,12 @@
 package com.haothink.thrift.service.client;
 
+import com.haothink.thrift.service.HelloWorldService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.apache.zookeeper.server.ServerConfig;
+
 
 /**
  * Created by wanghao on 2019-11-15
@@ -23,7 +24,7 @@ public class SimpleClient {
             HelloWorldService.Client client = new HelloWorldService.Client(protocol);
             transport.open();
 
-            String result = client.say("Leo");
+            String result = client.say("ThreadPoolServer");
             System.out.println("Result =: " + result);
         } catch (TException e) {
             e.printStackTrace();
