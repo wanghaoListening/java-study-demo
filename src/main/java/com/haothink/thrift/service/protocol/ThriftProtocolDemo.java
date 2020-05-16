@@ -12,7 +12,7 @@ import java.io.IOException;
 
 /**
  * Created by wanghao on 2019-11-18
- * mail:hiwanghao@didiglobal.com
+ * mail:wanghaotime@qq.com
  **/
 public class ThriftProtocolDemo {
 
