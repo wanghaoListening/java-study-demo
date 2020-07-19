@@ -11,7 +11,6 @@ import de.odysseus.staxon.json.JsonXMLInputFactory;
 import de.odysseus.staxon.json.JsonXMLOutputFactory;
 import de.odysseus.staxon.xml.util.PrettyXMLEventWriter;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.JsonNode;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
