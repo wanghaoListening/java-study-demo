@@ -23,6 +23,7 @@ public class JexlDemo {
 
     public static void main(String[] args) {
 
+        //jexl freemarker
         JexlDemo jexlDemo = new JexlDemo();
         jexlDemo.testJexl();
     }
