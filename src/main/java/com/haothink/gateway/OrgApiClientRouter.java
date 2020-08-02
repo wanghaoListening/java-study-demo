@@ -6,7 +6,7 @@ package com.haothink.gateway;
  *
  * 机构api路由层
  **/
-public interface OrgApiRouter {
+public interface OrgApiClientRouter {
 
 
 

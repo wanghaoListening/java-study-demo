@@ -13,12 +13,12 @@ public class StardardFlowService {
 
     private ResponseDataConverter responseDataConverter;
 
-    private OrgApiRouter orgApiRouter;
+    private OrgApiClientRouter orgApiClientRouter;
 
     public void openEleAccount(EleAccountCreateReq eleAccountCreateReq) {
 
         String param = requestDataConverter.convert(eleAccountCreateReq);
-        String responseData = orgApiRouter.invoke(param);
+        String responseData = orgApiClientRouter.invoke(param);
         EleAccountInfo eleAccountInfo = responseDataConverter.convert(responseData);
         System.out.println(eleAccountInfo);
 
