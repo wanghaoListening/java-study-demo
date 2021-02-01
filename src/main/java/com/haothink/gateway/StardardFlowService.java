@@ -2,7 +2,7 @@ package com.haothink.gateway;
 
 /**
  * Created by wanghao on 2020-07-18
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  *
  * 标准流程控制层
  **/

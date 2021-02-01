@@ -13,7 +13,7 @@ import java.util.Properties;
 
 /**
  * Created by wanghao on 2020-07-17
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  **/
 public class JsonPathDemo {
 

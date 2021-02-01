@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 
 /**
  * Created by wanghao on 2020-05-16
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  **/
 public class MyFSDataInputStream extends FSDataInputStream {
 

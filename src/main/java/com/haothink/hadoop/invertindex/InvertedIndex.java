@@ -15,7 +15,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 /**
  * Created by wanghao on 2020-06-06
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  **/
 public class InvertedIndex {
 

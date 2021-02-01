@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * Created by wanghao on 2020-06-18
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  **/
 public class HbaseClientDemo {
 

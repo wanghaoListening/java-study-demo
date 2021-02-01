@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Created by wanghao on 2020-03-17
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  *
  **/
 public class DuplicateLineFilter {

@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Created by wanghao on 2020-07-19
- * mail:hiwanghao@didiglobal.com
+ * mail:hiwanghao
  **/
 public class DateUtil {
 
